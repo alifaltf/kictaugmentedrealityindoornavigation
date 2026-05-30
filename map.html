@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KICT Navigation Map</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="map.css">
+</head>
+<body>
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading Map</div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <a href="main.html" class="back-btn">← Back</a>
+        <div class="header-inner">
+            <img src="logo.png" alt="IIUM KICT Logo" class="header-logo">
+        </div>
+    </header>
+
+    <!-- Mappedin embed -->
+    <div class="map-container">
+        <iframe
+            src="https://app.mappedin.com/map/69544ca08dcd71000be3aa3e?embedded=true"
+            title="Mappedin Map"
+            name="Mappedin Map"
+            allow="clipboard-write 'self' https://app.mappedin.com; web-share 'self' https://app.mappedin.com"
+            scrolling="no"
+            frameborder="0"
+            id="mapFrame"
+            onload="document.getElementById('loadingOverlay').classList.add('hidden')">
+        </iframe>
+
+        <!-- AR button — sits on top of the map, left side, always visible -->
+        <a href="ar.html" class="ar-fab" id="arBtn" title="Open AR Navigation">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 9V7a2 2 0 012-2h2M3 15v2a2 2 0 002 2h2M15 5h2a2 2 0 012 2v2M19 15v2a2 2 0 01-2 2h-2" stroke="#797676" stroke-width="1.8" stroke-linecap="round"/>
+                <circle cx="12" cy="12" r="3" stroke="#797676" stroke-width="1.8"/>
+                <circle cx="12" cy="12" r="1" fill="#797676"/>
+            </svg>
+            <span class="ar-fab-label">AR</span>
+        </a>
+    </div>
+
+    <!-- Footer pill -->
+    <div class="footer-bar">KICT Indoor Navigation</div>
+
+    <!-- AR warning modal (desktop only, triggered on AR button click) -->
+    <div class="ar-modal-overlay" id="arModalOverlay">
+        <div class="ar-modal">
+            <div class="ar-modal-icon">📵</div>
+            <div class="ar-modal-title">AR Unavailable</div>
+            <div class="ar-modal-text">
+                This device does not support camera-based AR features.
+                Please switch to a mobile device or continue using the 2D map navigation.
+            </div>
+            <button class="ar-modal-btn" onclick="closeArModal()">Continue with Map</button>
+        </div>
+    </div>
+
+    <script>
+        // Fallback: hide loading after 8s
+        setTimeout(() => {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }, 8000);
+
+        const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+        function closeArModal() {
+            document.getElementById('arModalOverlay').classList.remove('visible');
+        }
+
+        // On desktop: show modal instead of navigating to AR
+        if (!isTouch) {
+            document.getElementById('arBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('arModalOverlay').classList.add('visible');
+            });
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('arModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeArModal();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KICT AR Navigation</title>
+    <link rel="stylesheet" href="ar.css">
+
+    <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script src="https://unpkg.com/aframe-look-at-component@0.8.0/dist/aframe-look-at-component.min.js"></script>
+
+    <script src="level1.js?v=2"></script>
+    <script src="level2.js?v=2"></script>
+</head>
+
+<body>
+
+    <div id="ui-overlay">
+
+        <!-- Top bar: back + level buttons -->
+        <div id="top-bar">
+            <a href="map.html" id="back-home-btn">← MAP</a>
+            <div id="floor-menu">
+                <button class="dest-btn floor-btn" onclick="showLevelRooms(1)">LEVEL 1</button>
+                <button class="dest-btn floor-btn" onclick="showLevelRooms(2)">LEVEL 2</button>
+            </div>
+        </div>
+
+        <!-- Room destination panel -->
+        <div id="destination-menu">
+            <div id="level-1-list" style="display:none;">
+                <div class="room-label">L1 ROOMS</div>
+                <button class="dest-btn" onclick="setDestination('Lobby')">Lobby (Entrance)</button>
+                <button class="dest-btn" onclick="setDestination('LR 5')">LR 5</button>
+            </div>
+            <div id="level-2-list" style="display:none;">
+                <div class="room-label">L2 ROOMS</div>
+                <button class="dest-btn" onclick="setDestination('MPH')">Multi Purpose Hall</button>
+            </div>
+            <button class="dest-btn back-floor-btn" onclick="resetToFloors()">⬅ BACK</button>
+        </div>
+
+        <!-- Floating MENU recovery bubble -->
+        <button id="back-to-menu-btn" onclick="resetToFloors()">MENU</button>
+
+        <div id="level-toast">System Ready</div>
+    </div>
+
+    <!-- A-Frame AR Scene -->
+    <a-scene embedded
+        vr-mode-ui="enabled: false"
+        arjs="sourceType: webcam;
+              detectionMode: mono_and_matrix;
+              matrixCodeType: 3x3;
+              debugUIEnabled: false;
+              trackingMethod: best;"
+        device-orientation-permission-ui="enabled: false">
+
+        <!-- PERMANENT LOBBY MARKER -->
+        <a-marker type="barcode" value="1" id="lobby-marker">
+            <a-plane position="0 1.8 -0.01" width="2.5" height="0.4" color="white" opacity="0.7" look-at="[camera]"></a-plane>
+            <a-text id="lobby-text" value="SELECT A DESTINATION" position="0 1.8 0" align="center" color="black" look-at="[camera]" scale="1 1 1"></a-text>
+            <a-entity id="lobby-arrow" geometry="primitive: cone" material="color: lime" rotation="-90 0 0" position="0 0.2 0" scale="0.5 0.7 0.5" visible="false"></a-entity>
+        </a-marker>
+
+        <!-- LEVEL 1 runtime group -->
+        <a-entity id="level1-group" visible="true">
+            <a-entity id="l1-content"></a-entity>
+        </a-entity>
+
+        <!-- LEVEL 2 runtime group -->
+        <a-entity id="level2-group" visible="false">
+            <a-entity id="l2-content"></a-entity>
+        </a-entity>
+
+        <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+        let currentTarget = "none";
+        let currentLevel = 1;
+
+        function showLevelRooms(lvl) {
+            currentLevel = lvl;
+            document.querySelector('#floor-menu').style.display = 'none';
+            document.querySelector('#destination-menu').style.display = 'block';
+            document.querySelector('#level-1-list').style.display = (lvl === 1) ? 'block' : 'none';
+            document.querySelector('#level-2-list').style.display = (lvl === 2) ? 'block' : 'none';
+            document.querySelector('#level1-group').setAttribute('visible', lvl === 1);
+            document.querySelector('#level2-group').setAttribute('visible', lvl === 2);
+        }
+
+        function setDestination(target) {
+            currentTarget = target;
+            document.querySelector('#destination-menu').style.display = 'none';
+            document.querySelector('#floor-menu').style.display = 'none';
+            document.querySelector('#back-to-menu-btn').style.display = 'block';
+
+            const textEl  = document.querySelector('#lobby-text');
+            const arrowEl = document.querySelector('#lobby-arrow');
+
+            if (target === 'LR 5') {
+                textEl.setAttribute('value', 'TURN LEFT FOR LR 5');
+                arrowEl.setAttribute('rotation', '-90 90 0');
+                arrowEl.setAttribute('visible', 'true');
+            } else if (target === 'MPH') {
+                textEl.setAttribute('value', 'TURN RIGHT FOR STAIRS (TO MPH)');
+                arrowEl.setAttribute('rotation', '-90 -90 0');
+                arrowEl.setAttribute('visible', 'true');
+            } else if (target === 'Lobby') {
+                textEl.setAttribute('value', 'YOU ARE AT LOBBY');
+                arrowEl.setAttribute('visible', 'false');
+            }
+
+            if (typeof updateMarkers === "function") updateMarkers();
+            fixCamera();
+        }
+
+        function resetToFloors() {
+            currentTarget = "none";
+            document.querySelector('#floor-menu').style.display = 'flex';
+            document.querySelector('#destination-menu').style.display = 'none';
+            document.querySelector('#back-to-menu-btn').style.display = 'none';
+
+            const textEl  = document.querySelector('#lobby-text');
+            const arrowEl = document.querySelector('#lobby-arrow');
+            textEl.setAttribute('value', 'SELECT A DESTINATION');
+            arrowEl.setAttribute('visible', 'false');
+
+            updateMarkers();
+            fixCamera();
+        }
+
+        function updateMarkers() {
+            const l1 = document.querySelector('#l1-content');
+            if (typeof loadLevel1 === "function") l1.innerHTML = loadLevel1();
+            const l2 = document.querySelector('#l2-content');
+            if (typeof loadLevel2 === "function") l2.innerHTML = loadLevel2();
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+                updateMarkers();
+            }, 1000);
+        });
+
+        function fixCamera() {
+            const scene = document.querySelector('a-scene');
+            if (scene && scene.systems.arjs) scene.systems.arjs.onResize();
+        }
+    </script>
+</body>
+</html>

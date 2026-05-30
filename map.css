@@ -1,0 +1,257 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --grey: #D9D9D9;
+    --stroke: #797676;
+    --white: #ffffff;
+    --black: #0A0A0A;
+    --header-bg: #D4D4D4;
+    --map-bg: #E8E8E8;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: var(--map-bg);
+    font-family: 'Rajdhani', sans-serif;
+    overflow: hidden;
+}
+
+/* ── HEADER ── */
+header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 90px;
+    background: var(--header-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+}
+
+.header-logo {
+    height: 58px;
+    width: auto;
+    object-fit: contain;
+}
+
+.back-btn {
+    position: absolute;
+    left: 16px;
+    background: var(--white);
+    border: 1.5px solid var(--stroke);
+    border-radius: 50px;
+    padding: 6px 16px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    color: var(--black);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.back-btn:hover {
+    background: var(--grey);
+}
+
+/* ── MAP CONTAINER — relative so AR button can sit inside it ── */
+.map-container {
+    position: fixed;
+    top: 90px; left: 0; right: 0;
+    bottom: 48px;
+}
+
+.map-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+/* ── AR FAB — always visible, on top of map, left side ── */
+.ar-fab {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 200;
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    background: var(--white);
+    border: 1.5px solid #ccc;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.13);
+    text-decoration: none;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.ar-fab:hover {
+    background: var(--grey);
+}
+
+.ar-fab:active {
+    transform: translateY(-50%) scale(0.93);
+}
+
+.ar-fab svg {
+    width: 26px;
+    height: 26px;
+}
+
+.ar-fab-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--black);
+}
+
+/* ── FOOTER — plain text, no box ── */
+.footer-bar {
+    position: fixed;
+    bottom: 20px;
+    left: 0; right: 0;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Helvetica Neue', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--stroke);
+    z-index: 100;
+    pointer-events: none;
+}
+
+/* ── AR WARNING MODAL ── */
+.ar-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+}
+
+.ar-modal-overlay.visible {
+    display: flex;
+}
+
+.ar-modal {
+    background: var(--white);
+    border: 1.5px solid #ccc;
+    border-radius: 12px;
+    padding: 32px 28px 24px;
+    max-width: 400px;
+    width: calc(100% - 48px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+}
+
+.ar-modal-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--grey);
+    border: 1.5px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.ar-modal-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 2px;
+    color: var(--black);
+    text-transform: uppercase;
+}
+
+.ar-modal-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--stroke);
+    line-height: 1.6;
+}
+
+.ar-modal-btn {
+    margin-top: 4px;
+    padding: 11px 36px;
+    background: var(--grey);
+    border: 1.5px solid #ccc;
+    border-radius: 50px;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--black);
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.ar-modal-btn:hover {
+    background: #c8c8c8;
+}
+
+/* ── LOADING OVERLAY ── */
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--map-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 999;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+.loading-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loading-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgba(121,118,118,0.2);
+    border-top-color: var(--stroke);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.loading-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--stroke);
+    text-transform: uppercase;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

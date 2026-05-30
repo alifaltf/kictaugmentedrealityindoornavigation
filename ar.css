@@ -1,0 +1,203 @@
+/* ── Base ── */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent !important;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.arjs-loader { display: none !important; }
+
+video, .a-canvas, .arjs-video {
+    width: 100vw !important;
+    height: 100vh !important;
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    object-fit: cover !important;
+    margin: 0 !important;
+}
+
+.a-container {
+    width: 100vw !important;
+    height: 100vh !important;
+}
+
+/* ── UI Overlay ── */
+#ui-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999 !important;
+    pointer-events: none;
+}
+
+/* ── Top bar ── */
+#top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    pointer-events: auto;
+}
+
+#back-home-btn {
+    background: rgba(0, 0, 0, 0.75);
+    color: #E8C547;
+    border: 1.5px solid #C9A227;
+    border-radius: 50px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s;
+}
+
+#back-home-btn:hover {
+    background: rgba(201, 162, 39, 0.2);
+}
+
+/* ── Level picker buttons ── */
+#floor-menu {
+    pointer-events: auto;
+    display: flex;
+    gap: 10px;
+}
+
+.floor-btn {
+    background: #00ffd0 !important;
+    color: black !important;
+    padding: 12px 18px !important;
+}
+
+/* ── Destination panel ── */
+#destination-menu {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 10px;
+    width: 160px;
+    height: 350px;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid #00FFFF;
+    border-radius: 10px;
+    padding: 10px;
+    pointer-events: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #08bb97 #000;
+}
+
+#destination-menu::-webkit-scrollbar       { width: 6px; }
+#destination-menu::-webkit-scrollbar-track { background: #111; }
+#destination-menu::-webkit-scrollbar-thumb { background: #08bb97; border-radius: 10px; }
+
+.room-label {
+    color: #00ffd0;
+    font-size: 11px;
+    text-align: center;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+/* ── Buttons ── */
+.dest-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #08bb97;
+    border: 2px solid #000;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.dest-btn:active {
+    background: #08bb97;
+    color: #000;
+    transform: scale(0.95);
+}
+
+.back-floor-btn {
+    background: #444 !important;
+    margin-top: 10px;
+    border: none !important;
+}
+
+/* ── Toast ── */
+#level-toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    padding: 20px 30px;
+    border-radius: 15px;
+    border: 1px solid #08bb97;
+    text-align: center;
+    font-weight: bold;
+    z-index: 10001;
+    display: none;
+    pointer-events: none;
+    min-width: 200px;
+}
+
+#level-toast.show {
+    display: block;
+    animation: fadeInOut 3s forwards;
+}
+
+/* ── Floating MENU button ── */
+#back-to-menu-btn {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #00FFFF;
+    color: black;
+    font-weight: bold;
+    font-size: 13px;
+    letter-spacing: 1px;
+    border: none;
+    z-index: 10000;
+    pointer-events: auto;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+    animation: pulse 2s infinite;
+}
+
+/* ── Animations ── */
+@keyframes fadeInOut {
+    0%   { opacity: 0; transform: translate(-50%, -40%); }
+    15%  { opacity: 1; transform: translate(-50%, -50%); }
+    85%  { opacity: 1; transform: translate(-50%, -50%); }
+    100% { opacity: 0; transform: translate(-50%, -60%); }
+}
+
+@keyframes pulse {
+    0%   { transform: scale(1);    box-shadow: 0 0 0 0   rgba(0, 255, 255, 0.7); }
+    70%  { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(0, 255, 255, 0); }
+    100% { transform: scale(1);    box-shadow: 0 0 0 0   rgba(0, 255, 255, 0); }
+}
